@@ -20,11 +20,11 @@ How the Figma design system relates to the current landing page draft, and where
 
 | | Figma components | Landing page |
 |---|------------------|--------------|
-| Surfaces | White `#FDFEFF` | Dark slate |
-| Form fields | White bg, `#E1E5F0` border | Translucent white on dark |
-| Focus ring | 2px `#37485A` (slate) | 1px amber border |
+| Surfaces | White `#FDFEFF` | **Alternating** dark (`--slate-05`) and light (`--white`) sections |
+| Form fields | White bg, `#E1E5F0` border | White bg on Contact section — **now aligned** |
+| Focus ring | 2px `#37485A` (slate) | 1px amber border + `--steel-01` fill |
 
-**Recommendation:** Treat Figma as source for the **product/app UI**. Keep or document a **marketing dark theme** as a separate mode if the landing page stays dark.
+**Recommendation:** Treat Figma as source for the **product/app UI**. The landing page uses a **marketing rhythm** — dark editorial sections (Why, Coverage, Gallery) alternate with light sections (What we handle, Contact). Document new sections against this pattern rather than defaulting to all-dark.
 
 ### 2. Button shape
 
@@ -95,22 +95,23 @@ Suggested canonical mapping:
 
 ## Form components on landing
 
-Current contact form is a simplified subset of Figma **Text input / large + Label**:
+Contact form is now a simplified subset of Figma **Text input / large + Label** on a light surface:
 
 | Figma | Landing today |
 |-------|---------------|
-| White surface input | Dark translucent input |
-| Label 15 sentence case | 11.5px uppercase label |
+| White surface input | White bg ✓ |
+| Border default `#E1E5F0` | `rgba(131,148,165,.42)` (close) |
+| Label 15 sentence case | 11.5px uppercase label (marketing pattern) |
 | Optional description | Not used |
 | Optional icon | Not used |
-| Focus: 2px slate border | Focus: 1px amber |
+| Focus: 2px slate border | Focus: 1px amber border |
 
 Dropdown and Date picker exist in Figma but aren't on the landing page.
 
 ## Recommended next steps
 
-1. **Decide theme strategy** — one dark marketing theme in Figma, or keep app (light) + marketing (dark) as separate modes.
+1. **Document marketing theme in Figma** — dark/light section rhythm, eyebrow pattern, sharp-corner CTAs.
 2. **Resolve button spec** — align landing CTAs to Figma Primary/large or document marketing override.
 3. **Add Eyebrow to Figma** if it's a recurring marketing pattern.
 4. **Tokenize landing spacing** or accept marketing-specific layout values.
-5. **Update `index.html` CSS vars** to use Figma names when ready to sync.
+5. **Update CSS vars** to use Figma names when ready to sync.

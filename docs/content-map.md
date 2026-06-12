@@ -19,6 +19,7 @@ Page structure, anchor navigation, and copy inventory.
 | `#why` | Why InFrame | Hero ghost link |
 | `#work` | Capabilities | — (no nav link; could add) |
 | `#coverage` | Markets | — |
+| `#gallery` | Scroll gallery | — |
 | `#contact` | Contact | Header, hero primary CTA |
 
 ## Section-by-section copy
@@ -38,7 +39,9 @@ Page structure, anchor navigation, and copy inventory.
 **Eyebrow:** Why InFrame
 
 **Statement:**
-> *Large brokers reserve their specialists for their biggest accounts.* InFrame uses top advisors and modern technology to go deep with every client.
+> Large brokers reserve their specialists for their biggest accounts. *InFrame uses top advisors and modern technology to go deep with every client.*
+
+(Second sentence is wrapped in `<em>` and rendered in amber.)
 
 ### What we handle (Capabilities)
 
@@ -61,6 +64,19 @@ Page structure, anchor navigation, and copy inventory.
 **Subline:** We place property, casualty, and specialty coverage across the whole market — from standard carriers to hard-to-place and excess & surplus risk.
 
 **Coverage lines:** Property · General Liability · Commercial Auto · Workers' Comp · Professional Liability · Inland Marine · Cyber · Excess & Umbrella · & more
+
+### Scroll gallery
+
+**Label:** Built environment photography (aria-label only; no visible eyebrow)
+
+**Images (in order):**
+
+| # | File | Alt text |
+|---|------|----------|
+| 1 | `image-site01.png` | Construction jobsite with workers and equipment |
+| 2 | `image-corporate-building.png` | Modern corporate building exterior |
+| 3 | `image-corporate-building-1.png` | Commercial building in an urban setting |
+| 4 | `image-solar.png` | Solar panel installation on a commercial roof |
 
 ### Contact
 

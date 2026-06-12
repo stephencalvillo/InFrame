@@ -22,11 +22,21 @@ Avoid consumer-insurance language, cartoon mascots, or overly friendly startup c
 
 | Do | Don't |
 |----|-------|
-| Use amber for primary actions and numbered accents | Add extra accent colors (blue links, green success, etc.) |
-| Keep backgrounds in the slate family with subtle gradient shifts between sections | Introduce white or light-mode sections mid-page |
-| Use `--steel` / `--slate-02` for supporting copy | Use pure gray `#999` or off-palette neutrals |
+| Use amber for primary actions, numbered accents, and key emphasis | Add extra accent colors (blue links, green success, etc.) |
+| Alternate dark and light sections for rhythm (see below) | Randomly mix surfaces without intentional contrast |
+| Use `--slate-03` / `--slate-02` for supporting copy on light sections | Use pure gray `#999` or off-palette neutrals |
 
 Amber should **draw the eye to action** — one primary CTA per viewport when possible.
+
+### Section rhythm (dark ↔ light)
+
+The page follows an intentional alternation:
+
+```
+Hero (dark) → Why (dark) → What we handle (light) → Coverage (dark) → Gallery (dark) → Contact (light) → Footer (dark)
+```
+
+Light sections (`.work`, `.contact`) use `--white` backgrounds with `--slate-05` headings and `--slate-03` body copy. Dark sections use `--slate-05` with `--on-slate` text. New sections should continue this pattern rather than stacking multiple dark or light blocks without reason.
 
 ### Typography
 
@@ -39,22 +49,23 @@ Amber should **draw the eye to action** — one primary CTA per viewport when po
 
 ### Photography & hero
 
-The hero is the emotional anchor. When replacing the placeholder:
+The hero is the emotional anchor:
 
 - Prefer **editorial jobsite / built-environment** imagery
-- Maintain the **dual gradient overlay** for text legibility
+- Maintain **overlay + bottom gradient** for text legibility
 - Keep overlays warm-slate, not pure black
 - Avoid stock photos with obvious handshakes, headsets, or generic office scenes
 
-Beam silhouettes and grain are optional atmosphere — they should complement, not compete with, real photography.
+Current hero uses `assets/hero-images/hero_01.jpeg`. Swap for final brand-approved photography when ready.
 
 ## Layout principles
 
 1. **Single-column narrative** — sections stack vertically; no sidebar or multi-page nav on this draft.
-2. **Full-bleed hero, contained content** — hero media edge-to-edge; text lives in `.wrap` at 1180px max.
-3. **1px grid gutters** — capabilities and coverage lists use hairline dividers, not card shadows or rounded boxes.
-4. **Generous section padding** — ~108–120px vertical; don't compress sections below ~80px without reason.
-5. **Mobile-first breakpoints** — grids collapse at 760–860px; reduce horizontal padding at 640px.
+2. **Sticky hero, scrolling deck** — hero pins while `.scroll-content` slides over it; content sections live inside the deck.
+3. **Full-bleed hero, contained content** — hero media edge-to-edge; text lives in `.wrap` at 1180px max.
+4. **1px grid gutters** — capabilities and coverage lists use hairline dividers, not card shadows or rounded boxes.
+5. **Generous section padding** — ~108–120px vertical; don't compress sections below ~80px without reason.
+6. **Mobile-first breakpoints** — grids collapse at 760–860px; reduce horizontal padding at 640px.
 
 ## Content patterns
 
@@ -66,16 +77,22 @@ Most sections follow:
 Eyebrow (label)
 Headline or statement
 Supporting copy (optional)
-Content block (grid, list, or form)
+Content block (grid, list, form, or gallery)
 ```
 
 ### Capability cards
 
 Framed around **the reader's moment** — "When X happens" — not feature lists. Keep three cards for balance; if adding a fourth, reconsider grid (2×2 vs 4-column).
 
+Cards animate in with a drawn border stroke, then content fade-up — preserve this sequence when editing.
+
 ### Coverage lines
 
 Uppercase, compact grid cells. The last cell (`& more`) uses amber to signal extensibility without listing everything.
+
+### Scroll gallery
+
+Full-width dark section with steel texture. Images advance on scroll inside a centered square frame. No copy in this section — photography only. Use built-environment imagery consistent with the hero.
 
 ## Interaction
 
@@ -83,8 +100,10 @@ Uppercase, compact grid cells. The last cell (`& more`) uses amber to signal ext
 |---------|-----------|
 | Primary CTA | Amber button with arrow; links to `#contact` |
 | Secondary action | Ghost text link; no button styling |
+| Header (scrolled) | Wordmark → condensed mark; Contact text → amber button |
 | Hover | Subtle color shift or 2px lift on buttons — no aggressive scale |
 | Scroll | Smooth scroll to anchors; section reveals on enter |
+| Why mark | I appears, then serif bars grow outward — one-time on scroll |
 | Form | Inline validation message only (no modal); success copy uses first name |
 
 ## Voice & copy checklist
@@ -98,14 +117,17 @@ When editing copy, check:
 
 ## What to preserve unless asked otherwise
 
-These are core to the draft the client likes:
+These are core to the current draft:
 
-- Dark-only palette with amber accent
-- Full-viewport hero with bottom-aligned content
-- Three-column capability grid with numbered amber labels
-- Coverage grid with uppercase line names
-- Two-column contact (copy left, form right)
+- Dark/light section rhythm with amber accent
+- Sticky full-viewport hero with scroll-over content deck
+- Fixed header with scroll state (wordmark → mark, Contact → button)
+- Three-column capability grid with numbered amber labels and stroke animation
+- Coverage grid with uppercase line names and animated pack diagram
+- Scroll-pinned photography gallery before Contact
+- Two-column contact (copy left, form right) on white background
 - Minimal top nav (logo + Contact only)
+- Why InFrame animated mark watermark
 
 ## Extension guidance
 
@@ -115,5 +137,6 @@ If adding new sections, match:
 - Same eyebrow + headline pattern
 - Same border-top separator between major sections
 - Same reveal animation class (`.reveal`) for scroll entrance
+- Continue the dark/light alternation from adjacent sections
 
 If the site grows beyond one page, consider extracting tokens to a shared CSS file before duplicating styles.

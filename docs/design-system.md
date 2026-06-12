@@ -1,6 +1,6 @@
 # Design System
 
-Tokens from the [InFrame Design System Figma file](https://www.figma.com/design/IIllznqxWUCWcbCDblzqkL/InFrame-Design-System), with notes on how the landing page draft (`index.html`) implements them today.
+Tokens from the [InFrame Design System Figma file](https://www.figma.com/design/IIllznqxWUCWcbCDblzqkL/InFrame-Design-System), with notes on how the landing page (`index.html`) implements them today.
 
 ## Figma color tokens (canonical)
 
@@ -70,36 +70,42 @@ Tokens from the [InFrame Design System Figma file](https://www.figma.com/design/
 
 ## Landing page CSS (current implementation)
 
-All landing colors are defined as CSS custom properties on `:root`. These predate full Figma sync — see [figma-html-alignment.md](./figma-html-alignment.md).
+All landing colors are defined as CSS custom properties on `:root`. See [figma-html-alignment.md](./figma-html-alignment.md) for how these relate to Figma tokens.
 
 | Token | Hex | Role |
 |-------|-----|------|
-| `--slate-05` | `#222F3E` | Primary background, button text on amber |
-| `--slate-04` | `#37485A` | Footer legal text |
-| `--slate-03` | `#526477` | Form labels, licensed line, footer links |
-| `--slate-02` | `#8394A5` | Body secondary text, capability descriptions |
-| `--steel` | `#C9CFE1` | Muted text, nav CTA, sublines, ghost links |
+| `--slate-05` | `#222F3E` | Primary dark background, button text on amber |
+| `--slate-04` | `#37485A` | — (defined, lightly used) |
+| `--slate-03` | `#526477` | Body copy on light sections, licensed line |
+| `--slate-02` | `#8394A5` | Eyebrows, form labels, footer text |
+| `--steel` | `#C9CFE1` | Mark fills, muted accents |
 | `--steel-02` | `#E1E5F0` | — (defined, lightly used) |
-| `--steel-01` | `#F4F6FB` | — (defined, lightly used) |
-| `--amber` | `#EFB921` | Primary accent, CTAs, focus states, numbered labels |
+| `--steel-01` | `#F4F6FB` | Input focus background, gallery frame fallback |
+| `--on-slate` | `#F4F6FB` | Primary text on dark backgrounds |
+| `--amber` | `#EFB921` | Primary accent, CTAs, focus states, emphasis |
 | `--amber-02` | `#F5CA52` | Button hover, form success message |
-| `--white` | `#FFFFFF` | Primary text on dark backgrounds |
+| `--white` | `#FFFFFF` | Light section backgrounds |
 
-### Section-specific backgrounds
+### Section backgrounds (page rhythm)
 
-| Section | Background |
-|---------|------------|
-| Body / default sections | `--slate-05` |
-| Hero overlay base | `#1b2630` (gradient terminus) |
-| Work (capabilities) | Linear gradient `#1f2a35` → `#222F3E` |
-| Contact | `#1b2630` |
-| Footer | `#19232c` |
+The page alternates **dark** and **light** sections for visual pacing:
+
+| Section | Background | Text |
+|---------|------------|------|
+| Body default | `--slate-05` | `--on-slate` |
+| Hero overlay base | `--slate-05` at 20% + bottom gradient | `--on-slate` |
+| Why InFrame | `--slate-05` | `--on-slate` |
+| What we handle (`.work`) | `--white` | `--slate-05` / `--slate-03` |
+| Coverage & access (`.markets`) | `--slate-05` | `--on-slate` |
+| Scroll gallery (`.gallery-scroll`) | `--slate-05` + `assets/image-steel-texture.png` | — |
+| Contact | `--white` | `--slate-05` / `--slate-03` |
+| Footer | `#19232c` | `--slate-02` |
 
 ### Borders and dividers
 
-Section separators use `1px solid rgba(131, 148, 165, 0.12–0.14)` — effectively `--slate-02` at low opacity.
+Section separators use `1px solid rgba(131, 148, 165, 0.12)` — effectively `--slate-02` at low opacity.
 
-Grid gaps (capabilities, coverage lines) use `1px` gutters with `rgba(131, 148, 165, 0.16–0.18)` as the grid background color.
+Grid gutters (capabilities, coverage lines) use `1px` with `rgba(131, 148, 165, 0.16–0.42)` depending on context.
 
 ## Typography
 
@@ -107,26 +113,26 @@ Grid gaps (capabilities, coverage lines) use `1px` gutters with `rgba(131, 148, 
 
 | Element | Size | Weight | Letter-spacing | Line-height | Notes |
 |---------|------|--------|----------------|-------------|-------|
-| `.eyebrow` | 11.5px | 600 | 0.26em | — | Uppercase, `--slate-02` (hero: `--steel`) |
+| `.eyebrow` | 11.5px | 600 | 0.26em | — | Uppercase, `--slate-02` |
 | `h1.headline` | clamp(38px, 6.4vw, 76px) | 600 | -0.022em | 1.04 | max-width ~14ch |
-| `.subline` | clamp(18px, 2vw, 22px) | 400 | — | 1.4 | max-width ~30ch |
+| `.subline` | clamp(18px, 2vw, 22px) | 400 | — | 1.4 | max-width tied to headline |
 | `.why-statement` | clamp(24px, 3.2vw, 36px) | 500 | -0.014em | 1.28 | max-width ~24ch |
 | Section `h2` | clamp(22–28px, 2.6–3.4vw, 30–40px) | 600 | -0.012 to -0.014em | 1.08–1.2 | Varies by section |
-| `.cap h3` | 19px | 600 | -0.01em | 1.25 | — |
-| `.cap p`, `.markets-sub` | 14.5–15.5px | 400 | — | 1.62 | `--slate-02` |
+| `.cap h3` | 19px | 600 | -0.01em | 1.25 | Dark text on light section |
+| `.cap p`, `.markets-sub`, `.contact .note` | 14.5–15.5px | 400 | — | 1.6–1.62 | `--slate-03` on light; inherited on dark |
 | `.cap .n` | 11.5px | 700 | 0.2em | — | Amber, numbered |
-| `.lines li` | 12.5px | 600 | 0.09em | — | Uppercase, `--steel` |
+| `.lines li` | 12.5px | 600 | 0.09em | — | Uppercase on dark |
 | `.btn` | 14.5px | 700 | — | — | Amber fill |
 | `.ghost`, `.nav-cta` | 13–13.5px | 600 | 0.02–0.04em | — | Text links |
-| Form labels | 11.5px | 600 | 0.14em | — | Uppercase |
-| Form inputs | 15px | 400 (inherit) | — | — | — |
+| Form labels | 11.5px | 600 | 0.14em | — | Uppercase, `--slate-02` |
+| Form inputs | 15px | 400 (inherit) | — | — | `--slate-05` on white |
 | Footer legal | 12px | 400 / 600 strong | — | 1.8 | — |
 
 ### Typographic patterns
 
 - **Tight display headings** — negative letter-spacing on large headlines and section titles.
 - **Constrained line lengths** — headlines and statements use `max-width` in `ch` units for editorial rhythm.
-- **Emphasis without italics** — `.why-statement em` uses `font-style: normal` and `--steel` color instead of italic.
+- **Emphasis without italics** — `.why-statement em` uses `font-style: normal` and `--amber` color.
 
 ## Layout
 
@@ -134,6 +140,23 @@ Grid gaps (capabilities, coverage lines) use `1px` gutters with `rgba(131, 148, 
 |-------|-------|
 | `--maxw` | `1180px` |
 | `.wrap` padding | `40px` horizontal (desktop), `24px` (≤640px) |
+
+### Page structure
+
+```
+header.topbar (fixed)
+.hero-scroll-zone
+  section.hero (sticky, 100svh)
+  main.scroll-content (scrolls over hero)
+    section.why
+    section.work
+    section.markets
+    section.gallery-scroll
+    section.contact
+    footer
+```
+
+The hero stays pinned while content scrolls over it. `.scroll-content` carries an upward shadow for depth.
 
 ### Section vertical rhythm
 
@@ -143,6 +166,7 @@ Grid gaps (capabilities, coverage lines) use `1px` gutters with `rgba(131, 148, 
 | Why | `120px` / `116px` |
 | Work | `108px` / `120px` |
 | Markets | `108px` / `108px` |
+| Gallery | Tall scroll section (see below) |
 | Contact | `118px` / `104px` |
 | Footer | `50px` / `44px` |
 
@@ -156,8 +180,9 @@ Grid gaps (capabilities, coverage lines) use `1px` gutters with `rgba(131, 148, 
 
 ### Header
 
-- **Position:** absolute over hero, `z-index: 30`, `30px` vertical padding.
-- **Logo height:** 28px (header), 24px (footer).
+- **Position:** fixed, `z-index: 50`, `30px` vertical padding (unchanged when scrolled).
+- **Default (over hero):** wordmark 28px, Contact as text link.
+- **Scrolled (`.is-scrolled`, past hero):** slate fill slides in; wordmark → condensed mark at **45×45px**; Contact → amber button (`min-height: 45px`, `padding: 0 24px`).
 
 ## Components (visual treatment)
 
@@ -170,67 +195,84 @@ Grid gaps (capabilities, coverage lines) use `1px` gutters with `rgba(131, 148, 
 
 ### Ghost / text link (`.ghost`, `.nav-cta`)
 
-- Color: `--steel` → `--white` on hover
-- No underline by default
+- Default: inherited color, no underline
+- Scrolled header Contact (`.nav-cta`): becomes primary button styling
 
-### Eyebrow with rule (hero only)
+### Form fields (Contact section)
 
-- Flex row with `15px` gap
-- `34×1.5px` amber bar via `::before`
-
-### Form fields
-
-- Background: `rgba(255,255,255, 0.035)`
-- Border: `1px solid rgba(131, 148, 165, 0.3)`
-- Focus: amber border, slightly lighter background
+- Background: `--white`
+- Border: `1px solid rgba(131, 148, 165, 0.42)`
+- Focus: amber border, `--steel-01` background
 - Field stack gap: `16px`
 
 ### Capability cards (`.cap`)
 
+- White background on light section
+- SVG rect stroke (`.cap-edge`) draws in on scroll; body content fades up after
 - Padding: `36px 34px 40px`
-- Sit on `--slate-05` inside 1px grid gutter
 
 ## Imagery & atmosphere
 
 ### Hero (`.hero-photo`)
 
-Placeholder procedural jobsite scene — **replace with brand photography** before launch.
+Brand photography: `assets/hero-images/hero_01.jpeg` (cover, centered).
 
 Layer stack (bottom to top):
 
-1. `.hero-photo` — photo/placeholder + dual gradient overlays for legibility
-2. `.hero-beams` — decorative skewed beam silhouettes, 50% opacity, soft-light blend
-3. `.hero-grain` — diagonal stripe texture, masked fade
+1. `.hero-photo` — photography
+2. `.hero-overlay` — `--slate-05` at 20% opacity
+3. `.hero-fade` — bottom-up black gradient for legibility
 
-Photo treatment: `saturate(0.92)`, slow Ken Burns drift animation (26s).
+Photo treatment: slow Ken Burns drift animation (26s). Hero media also scales/translates slightly via `--hero-scroll` CSS variable as user scrolls.
 
-### Watermark (`.why .watermark`)
+### Why InFrame mark (`.why-mark`)
 
-Icon mark at ~5% opacity, bottom-right, max ~440px width.
+Inline SVG from `assets/inframe-mark-skewed.svg`. Decorative watermark at **6% opacity**, vertically centered, anchored at **72% from left**.
+
+Animation on scroll into section (`.why-mark.in`):
+
+1. I stem fades in (`.why-mark-i`)
+2. Top serif bar scales X from join point (`.why-mark-bar-top`)
+3. Bottom serif bar follows (`.why-mark-bar-bottom`)
+
+### Scroll gallery
+
+Four square images in `assets/site-images/`, clipped in a centered frame over steel texture background. Scroll progress drives vertical translation of `.gallery-strip`.
 
 ## Motion
 
 | Token / class | Behavior |
 |---------------|----------|
 | `--ease` | `cubic-bezier(0.2, 0.7, 0.2, 1)` |
+| `--hero-scroll` | 0–1, set by scroll JS; drives hero media scale and copy fade |
 | `.stag` + `.d1–.d4` | Hero entrance: rise + staggered delays (0.1s–0.56s) |
-| `.reveal` | Scroll reveal: opacity + 20px Y, 0.9s; triggered by IntersectionObserver at 16% threshold |
+| `.reveal` | Scroll reveal: opacity + 20px Y, 0.9s; IntersectionObserver at 12% threshold |
+| `.why-mark` | Separate observer; I fade + bar scaleX sequence |
+| `.cap-grid` | Stroke draw-in + staggered card body reveal |
+| `.coverage-pack.reveal` | Link draw, merge pulse, box amber fill (via `.reveal.in`) |
+| `.gallery-strip` | Scroll-linked `translateY` through pinned section |
+| `header.topbar.is-scrolled` | Fill slide, logo swap, Contact → button |
 | `.hero-photo` | Slow scale/translate drift |
-| `prefers-reduced-motion` | Disables animations and smooth scroll |
+| `prefers-reduced-motion` | Disables animations; gallery shows first slide only; header shows scrolled state styles without transitions |
 
 ## Accessibility notes (current)
 
 - Hero decorative layers marked `aria-hidden="true"`
+- Gallery section has `aria-label="Built environment photography"`
 - Form has labels, `autocomplete`, and `role="status"` on message
 - Logo home link has `aria-label`
 - Smooth scroll and motion respect reduced-motion preference
-- Color contrast: white/steel on slate generally passes for large text; verify small uppercase labels if adjusting colors
+- Verify contrast on light sections (`--slate-03` body on white) if adjusting colors
 
-## Assets (embedded)
+## Assets (`/assets/`)
 
-Currently inline as base64 data URIs:
-
-- Favicon / watermark icon
-- Wordmark (header + footer)
-
-**Recommendation:** Extract to `/assets/` for easier swaps and smaller HTML file size.
+| File | Usage |
+|------|-------|
+| `inframe-logo.svg` | Header wordmark |
+| `inframe-logo-mark-condensed.svg` | Source for inline header mark SVG |
+| `inframe-mark-skewed.svg` | Why section watermark (inline SVG in HTML) |
+| `inframe-favicon.svg` | Favicon |
+| `inframe-footer-logo-full-slate.svg` | Footer wordmark |
+| `hero-images/hero_01.jpeg` | Hero background |
+| `image-steel-texture.png` | Gallery section background |
+| `site-images/*.png` | Gallery slides (4 images) |

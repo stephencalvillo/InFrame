@@ -18,8 +18,9 @@ Documentation for the InFrame marketing landing page. Use these files when tweak
 
 - **Figma:** [InFrame Design System](https://www.figma.com/design/IIllznqxWUCWcbCDblzqkL/InFrame-Design-System) (colors, type) and [InFrame Components](https://www.figma.com/design/DzuotbQlniNQnwHvwormPw/InFrame-Components) (UI kit)
 - **Code draft:** [`../index.html`](../index.html) — single-page marketing site with embedded CSS and minimal JS
+- **Assets:** [`../assets/`](../assets/) — logos, photography, textures
 
-The landing page and Figma component library use different **themes** (dark marketing vs. light app UI). See [figma-html-alignment.md](./figma-html-alignment.md) before syncing styles.
+The landing page and Figma component library use different **themes** (alternating dark/light marketing vs. light app UI). See [figma-html-alignment.md](./figma-html-alignment.md) before syncing styles blindly.
 
 ## Brand snapshot
 

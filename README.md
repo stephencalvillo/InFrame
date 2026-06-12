@@ -10,7 +10,8 @@ Once GitHub Pages is enabled for this repository, the site is available at:
 
 ## Project structure
 
-- `index.html` — landing page draft
+- `index.html` — landing page
+- `assets/` — logos, photography, textures, favicon
 - `docs/` — design system, guidelines, Figma alignment notes
 
 ## Local preview
