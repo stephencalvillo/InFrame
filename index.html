@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: 2026-06-12-pinned-scroll-sections -->
+<!-- build: 2026-06-12-why-pin-scroll-tail -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -18,6 +18,7 @@
     --amber:#EFB921; --amber-02:#F5CA52; --white:#FFFFFF;
     --maxw:1180px; --ease:cubic-bezier(.2,.7,.2,1);
     --nav-h:88px;
+    --scroll-tail:0.45;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth; scroll-padding-top:var(--nav-h)}
@@ -148,40 +149,46 @@
   .btn svg{width:15px;height:15px}
   .ghost{color:inherit; font-weight:600; font-size:13.5px; letter-spacing:.04em; transition:color .3s var(--ease)}
 
-  /* ---------- why / point of view ---------- */
-  .why{padding:120px 0 116px; background:var(--slate-05); color:var(--on-slate); position:relative; overflow:hidden}
+  /* ---------- why / point of view (scroll-pinned watermark) ---------- */
+  .why{background:var(--slate-05); color:var(--on-slate); padding:0; position:relative}
+  .why-scroll{
+    --scroll-steps:3;
+    position:relative;
+    height:calc((var(--scroll-steps) + var(--scroll-tail)) * (100svh - var(--nav-h)));
+  }
+  .why-sticky{
+    position:sticky; top:var(--nav-h);
+    height:calc(100svh - var(--nav-h));
+    width:100%;
+    display:flex; align-items:center;
+    overflow:hidden;
+  }
   .why-mark{
     position:absolute; top:50%; left:72%;
     transform:translate(-50%, -50%);
     width:min(36vw, 340px); height:auto; max-height:calc(100% - 64px);
     z-index:0; opacity:.06; pointer-events:none; display:block;
   }
-  .why-mark-i{
-    opacity:0;
-    transition:opacity .55s var(--ease);
+  .why-mark-i{opacity:var(--why-i-p, 0); transition:none}
+  .why-mark-bar{transition:none}
+  .why-mark-bar-top{transform:scaleX(var(--why-bar-top-p, 0)); transform-origin:105px 12.4778px}
+  .why-mark-bar-bottom{transform:scaleX(var(--why-bar-bottom-p, 0)); transform-origin:105px 184.452px}
+  .why-sticky .wrap{
+    position:relative; z-index:2; width:100%;
+    max-height:calc(100svh - var(--nav-h));
+    padding-top:24px; padding-bottom:24px;
+    box-sizing:border-box;
+    display:flex; flex-direction:column; justify-content:center;
   }
-  .why-mark-bar{
-    transform:scaleX(0);
-    transition:transform .85s var(--ease);
-  }
-  .why-mark-bar-top{transform-origin:105px 12.4778px}
-  .why-mark-bar-bottom{transform-origin:105px 184.452px; transition-delay:0s}
-  .why-mark.in .why-mark-i{opacity:1}
-  .why-mark.in .why-mark-bar{
-    transform:scaleX(1);
-    transition-delay:.42s;
-  }
-  .why-mark.in .why-mark-bar-bottom{transition-delay:.52s}
-  .why .wrap{position:relative; z-index:2}
   .why-statement{margin-top:30px; font-weight:500; letter-spacing:-.014em; line-height:1.28; font-size:clamp(24px,3.2vw,36px); color:inherit; max-width:24ch}
   .why-statement em{font-style:normal; color:var(--amber)}
 
   /* ---------- capabilities (scroll-pinned card sequence) ---------- */
   .work{background:var(--steel-02); border-top:1px solid rgba(131,148,165,.12); padding:0}
   .work-scroll{
-    --work-steps:3;
+    --scroll-steps:3;
     position:relative;
-    height:calc(var(--work-steps) * (100svh - var(--nav-h)));
+    height:calc((var(--scroll-steps) + var(--scroll-tail)) * (100svh - var(--nav-h)));
   }
   .work-sticky{
     position:sticky; top:var(--nav-h);
@@ -238,9 +245,9 @@
   /* ---------- coverage & markets ---------- */
   .markets{background:var(--slate-05); color:var(--on-slate); border-top:1px solid rgba(131,148,165,.12); padding:0 0 108px}
   .markets-scroll{
-    --pack-steps:3;
+    --scroll-steps:3;
     position:relative;
-    height:calc(var(--pack-steps) * (100svh - var(--nav-h)));
+    height:calc((var(--scroll-steps) + var(--scroll-tail)) * (100svh - var(--nav-h)));
   }
   .markets-sticky{
     position:sticky; top:var(--nav-h);
@@ -309,10 +316,11 @@
   /* ---------- scroll gallery (pinned image sequence) ---------- */
   .gallery-scroll{
     --gallery-count:4;
+    --scroll-steps:4;
     --gallery-frame-size:min(560px, calc(100vw - 80px));
     position:relative;
     background:var(--slate-05);
-    height:calc(var(--gallery-count) * (100svh - var(--nav-h)));
+    height:calc((var(--scroll-steps) + var(--scroll-tail)) * (100svh - var(--nav-h)));
     border-top:1px solid rgba(131,148,165,.12);
   }
   .gallery-scroll.has-texture{
@@ -383,9 +391,9 @@
     .reveal,.stag{opacity:1;transform:none;transition:none;animation:none}
     .hero-photo{animation:none}
     .hero-media,.hero .wrap{transform:none; opacity:1; will-change:auto}
-    .work-scroll,.markets-scroll{height:auto}
-    .work-sticky,.markets-sticky{position:relative; height:auto; min-height:0; overflow:visible}
-    .work-sticky .wrap,.markets-sticky .wrap{padding-top:108px; padding-bottom:48px}
+    .why-scroll,.work-scroll,.markets-scroll,.gallery-scroll{height:auto}
+    .why-sticky,.work-sticky,.markets-sticky,.gallery-sticky{position:relative; height:auto; min-height:0; overflow:visible}
+    .why-sticky .wrap,.work-sticky .wrap,.markets-sticky .wrap{padding-top:108px; padding-bottom:48px}
     .markets{padding-bottom:108px}
     .cap-grid-wrap{max-height:none; overflow:visible}
     .work .grid3{transform:none !important}
@@ -405,8 +413,8 @@
     header.topbar.is-scrolled .nav-cta{background:var(--amber); color:var(--slate-05); min-height:45px; padding:0 24px; font-size:14px; font-weight:700}
     header.topbar.is-scrolled .logo-link{height:45px}
     header.topbar.is-scrolled .logo-mark{width:45px; height:45px}
-    .why-mark-bar{transform:none; transition:none}
-    .why-mark-i{opacity:1; transition:none}
+    .why-mark-i{opacity:1}
+    .why-mark-bar-top,.why-mark-bar-bottom{transform:scaleX(1)}
     .gallery-sticky{position:relative; height:auto; padding:88px 0}
     .gallery-strip{transform:none !important}
     .gallery-slide{display:none}
@@ -471,28 +479,32 @@
 <main class="scroll-content">
 
 <section class="why" id="why">
-  <svg class="why-mark" viewBox="0 0 201 198" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <g class="why-mark-i">
-      <path d="M0 0V24.3248H32.4459V172.72H0V197.045H91.7389V172.72H59.293V24.3248H92.7707V0H0Z" fill="#C9CFE1"/>
-    </g>
-    <g class="why-mark-bar why-mark-bar-top">
-      <path d="M200.637 0.057373H105.095V24.8981H200.637V0.057373Z" fill="url(#why-mark-g0)" fill-opacity="0.8"/>
-    </g>
-    <g class="why-mark-bar why-mark-bar-bottom">
-      <path d="M200.637 172.032H105.095V196.873H200.637V172.032Z" fill="url(#why-mark-g1)" fill-opacity="0.8"/>
-    </g>
-    <defs>
-      <linearGradient id="why-mark-g0" x1="105.095" y1="12.4778" x2="196.518" y2="12.4778" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#C9CFE1"/><stop offset="1" stop-color="#222F3E" stop-opacity="0"/>
-      </linearGradient>
-      <linearGradient id="why-mark-g1" x1="105.095" y1="184.452" x2="196.518" y2="184.452" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#C9CFE1"/><stop offset="1" stop-color="#222F3E" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-  </svg>
-  <div class="wrap">
-    <p class="eyebrow">Why InFrame</p>
-    <p class="why-statement">Large brokers reserve their specialists for their biggest accounts. <em>InFrame uses top advisors and modern technology to go deep with every client.</em></p>
+  <div class="why-scroll">
+    <div class="why-sticky">
+      <svg class="why-mark" viewBox="0 0 201 198" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g class="why-mark-i">
+          <path d="M0 0V24.3248H32.4459V172.72H0V197.045H91.7389V172.72H59.293V24.3248H92.7707V0H0Z" fill="#C9CFE1"/>
+        </g>
+        <g class="why-mark-bar why-mark-bar-top">
+          <path d="M200.637 0.057373H105.095V24.8981H200.637V0.057373Z" fill="url(#why-mark-g0)" fill-opacity="0.8"/>
+        </g>
+        <g class="why-mark-bar why-mark-bar-bottom">
+          <path d="M200.637 172.032H105.095V196.873H200.637V172.032Z" fill="url(#why-mark-g1)" fill-opacity="0.8"/>
+        </g>
+        <defs>
+          <linearGradient id="why-mark-g0" x1="105.095" y1="12.4778" x2="196.518" y2="12.4778" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#C9CFE1"/><stop offset="1" stop-color="#222F3E" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="why-mark-g1" x1="105.095" y1="184.452" x2="196.518" y2="184.452" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#C9CFE1"/><stop offset="1" stop-color="#222F3E" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="wrap">
+        <p class="eyebrow">Why InFrame</p>
+        <p class="why-statement">Large brokers reserve their specialists for their biggest accounts. <em>InFrame uses top advisors and modern technology to go deep with every client.</em></p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -684,6 +696,8 @@
     var workScroll=document.querySelector('.work-scroll');
     var capGrid=workScroll&&workScroll.querySelector('.cap-grid');
     var caps=capGrid?capGrid.querySelectorAll('.cap'):[];
+    var whyScroll=document.querySelector('.why-scroll');
+    var whyMark=whyScroll&&whyScroll.querySelector('.why-mark');
     var marketsScroll=document.querySelector('.markets-scroll');
     var packStage=marketsScroll&&marketsScroll.querySelector('.pack-stage');
     var packNodes=packStage?packStage.querySelectorAll('.pack-node'):[];
@@ -721,10 +735,37 @@
       return Math.min(1, Math.max(0, -rect.top/scrollable));
     }
 
+    function sectionConfig(section){
+      if(!section)return {steps:1, tail:0.45};
+      var style=getComputedStyle(section);
+      var root=getComputedStyle(document.documentElement);
+      return {
+        steps:parseFloat(style.getPropertyValue('--scroll-steps'))||1,
+        tail:parseFloat(style.getPropertyValue('--scroll-tail'))||parseFloat(root.getPropertyValue('--scroll-tail'))||0.45
+      };
+    }
+
+    function animProgress(section){
+      var raw=scrollProgress(section);
+      var cfg=sectionConfig(section);
+      var end=cfg.steps/(cfg.steps+cfg.tail);
+      if(end<=0)return 1;
+      return Math.min(1, Math.max(0, raw/end));
+    }
+
     function setSteps(section, steps, p){
       if(!section)return;
       var step=Math.min(steps, Math.max(1, Math.floor(p*steps)+1));
       section.setAttribute('data-step', String(step));
+    }
+
+    function updateWhy(p){
+      if(!whyMark)return;
+      var n=3;
+      whyMark.style.setProperty('--why-i-p', Math.min(1, Math.max(0, p*n)).toFixed(4));
+      whyMark.style.setProperty('--why-bar-top-p', Math.min(1, Math.max(0, p*n-1)).toFixed(4));
+      whyMark.style.setProperty('--why-bar-bottom-p', Math.min(1, Math.max(0, p*n-2)).toFixed(4));
+      setSteps(whyScroll, n, p);
     }
 
     function updateWork(p){
@@ -775,13 +816,12 @@
         }
       }
       if(!reduced){
-        if(workScroll) updateWork(scrollProgress(workScroll));
-        if(marketsScroll) updatePack(scrollProgress(marketsScroll));
+        if(whyScroll) updateWhy(animProgress(whyScroll));
+        if(workScroll) updateWork(animProgress(workScroll));
+        if(marketsScroll) updatePack(animProgress(marketsScroll));
       }
       if(gallery&&strip&&frame&&slides.length&&!reduced){
-        var scrollable=gallery.offsetHeight-window.innerHeight;
-        var rect=gallery.getBoundingClientRect();
-        var gp=scrollable<=0?0:Math.min(1, Math.max(0, -rect.top/scrollable));
+        var gp=animProgress(gallery);
         var frameH=frame.offsetHeight||1;
         strip.style.transform='translateY('+(-gp*frameH*Math.max(0, slides.length-1))+'px)';
       }
@@ -818,6 +858,7 @@
     }
 
     if(reduced){
+      updateWhy(1);
       updateWork(1);
       updatePack(1);
     }
@@ -860,18 +901,6 @@
       en.forEach(function(e){if(e.isIntersecting){loadTexture();io.disconnect();}});
     },{rootMargin:'480px 0px'});
     io.observe(gallery);
-  })();
-  (function(){
-    var mark=document.querySelector('.why-mark');
-    if(!mark||mark.classList.contains('in'))return;
-    if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      mark.classList.add('in');return;
-    }
-    if(mark.getBoundingClientRect().top<window.innerHeight*1.05){mark.classList.add('in');return;}
-    var io=new IntersectionObserver(function(en){
-      en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
-    },{threshold:.12,rootMargin:'120px 0px -2% 0px'});
-    io.observe(mark);
   })();
   (function(){
     var f=document.getElementById('contactForm'),msg=document.getElementById('formMsg');
