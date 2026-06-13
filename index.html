@@ -200,12 +200,17 @@
 
   /* ---------- capabilities (scroll-pinned card sequence) ---------- */
   .work{
+    position:relative; z-index:1;
     background-color:var(--steel-02);
     background-image:radial-gradient(circle, rgba(131,148,165,.22) 1px, transparent 1px);
     background-size:14px 14px;
     background-attachment:fixed;
     border-top:1px solid rgba(131,148,165,.12);
     padding:0;
+  }
+  @media(max-width:820px){
+    .work{background-attachment:scroll}
+    .work-scroll{--scroll-tail:0.52}
   }
   .work-scroll{
     --scroll-steps:3;
@@ -214,10 +219,16 @@
     height:calc((var(--scroll-steps) + var(--scroll-tail)) * (100svh - var(--nav-h)) / var(--scroll-speed));
   }
   .work-sticky{
-    position:sticky; top:var(--nav-h);
+    position:sticky; top:var(--nav-h); z-index:1;
     height:calc(100svh - var(--nav-h));
     display:flex; align-items:center;
     overflow:hidden;
+    background-color:var(--steel-02);
+    background-image:radial-gradient(circle, rgba(131,148,165,.22) 1px, transparent 1px);
+    background-size:14px 14px;
+  }
+  @media(max-width:820px){
+    .work-sticky{background-attachment:scroll}
   }
   .work-sticky .wrap{
     width:100%; max-height:calc(100svh - var(--nav-h));
@@ -268,17 +279,30 @@
   .work .cap p{margin-top:12px; font-size:14.5px; line-height:1.62; color:var(--slate-03)}
 
   /* ---------- coverage & markets ---------- */
-  .markets{background:var(--slate-05); color:var(--on-slate); border-top:1px solid rgba(131,148,165,.12); padding:0 0 108px}
+  .markets{position:relative; z-index:2; background:var(--slate-05); color:var(--on-slate); border-top:1px solid rgba(131,148,165,.12); padding:0 0 108px}
   .markets-scroll{
     --scroll-steps:3;
     position:relative;
     height:calc((var(--scroll-steps) + var(--scroll-tail)) * (100svh - var(--nav-h)));
   }
+  @media(max-width:820px){
+    .markets-scroll::before{
+      content:'';
+      display:block;
+      height:calc(0.22 * (100svh - var(--nav-h)));
+      background:var(--slate-05);
+    }
+  }
   .markets-sticky{
-    position:sticky; top:var(--nav-h);
+    position:sticky; top:var(--nav-h); z-index:3;
     height:calc(100svh - var(--nav-h));
     display:flex; align-items:center;
     overflow:hidden;
+    background:var(--slate-05);
+  }
+  @media(max-width:820px){
+    .markets-sticky{align-items:flex-start}
+    .markets-sticky .wrap{padding-top:32px}
   }
   .markets-sticky .wrap{
     width:100%; max-height:calc(100svh - var(--nav-h));
@@ -929,15 +953,40 @@
       setSteps(whyScroll, n, p);
     }
 
+    function workMotionProgress(p, n, animRatio){
+      if(n<=0)return 0;
+      var beatW=1/n;
+      var motionP=0;
+      for(var i=0;i<n;i++){
+        var local=(p-i*beatW)/beatW;
+        if(local<=0){
+          motionP=i/n;
+          return motionP;
+        }
+        if(local>=1){
+          motionP=(i+1)/n;
+        }else if(local<=animRatio){
+          motionP=(i+local/animRatio)/n;
+          return motionP;
+        }else{
+          motionP=(i+1)/n;
+          return motionP;
+        }
+      }
+      return Math.min(1, motionP);
+    }
+
     function updateWork(p){
       if(!caps.length)return;
       var n=caps.length;
+      var animRatio=mobileCaps.matches?0.52:0.58;
+      var motionP=workMotionProgress(p, n, animRatio);
       caps.forEach(function(cap,i){
-        cap.style.setProperty('--cap-p', Math.min(1, Math.max(0, p*n-i)).toFixed(4));
+        cap.style.setProperty('--cap-p', Math.min(1, Math.max(0, motionP*n-i)).toFixed(4));
       });
       if(capGrid){
         if(mobileCaps.matches&&capShift>0){
-          capGrid.style.transform='translateY('+(-p*capShift)+'px)';
+          capGrid.style.transform='translateY('+(-motionP*capShift)+'px)';
         }else{
           capGrid.style.transform='';
         }
