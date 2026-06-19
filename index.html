@@ -514,6 +514,12 @@
   .contact.is-inview .contact-reveal--2{transition-delay:.14s}
   .contact.is-inview .contact-reveal--3{transition-delay:.23s}
   .contact.is-inview .contact-reveal--4{transition-delay:.32s}
+  .contact.is-inview .contact-reveal--5{transition-delay:.38s}
+  .contact.is-inview .contact-reveal--6{transition-delay:.47s}
+  .contact.is-inview .contact-reveal--7{transition-delay:.56s}
+  .contact.is-inview .contact-reveal--8{transition-delay:.65s}
+  .contact.is-inview .contact-reveal--9{transition-delay:.74s}
+  .contact.is-inview .contact-reveal--10{transition-delay:.83s}
   .contact .btn svg{
     opacity:0;
     transform:translateX(-14px);
@@ -522,7 +528,7 @@
   .contact.is-inview .btn svg{
     opacity:1;
     transform:translateX(0);
-    transition-delay:.52s;
+    transition-delay:.95s;
   }
   form{display:flex; flex-direction:column; gap:16px}
   .field label{
@@ -874,12 +880,12 @@
       <div>
         <!-- Wire to your form provider (Framer/Webflow form action, Formspree, HubSpot). Inline confirmation only for now. -->
         <form id="contactForm" novalidate>
-          <div class="field"><label for="name"><span>Name</span><span class="field-required">Required</span></label><input id="name" name="name" type="text" autocomplete="name" required /></div>
-          <div class="field"><label for="company"><span>Company</span><span class="field-required">Required</span></label><input id="company" name="company" type="text" autocomplete="organization" required /></div>
-          <div class="field"><label for="email"><span>Work email</span><span class="field-required">Required</span></label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-          <div class="field"><label for="phone"><span>Phone number</span><span class="field-required">Required</span></label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required /></div>
-          <div class="field"><label for="message"><span>Message</span></label><textarea id="message" name="message" rows="3" placeholder="How can we help?"></textarea></div>
-          <button class="btn" type="submit">Request a conversation
+          <div class="field contact-reveal contact-reveal--5"><label for="name"><span>Name</span><span class="field-required">Required</span></label><input id="name" name="name" type="text" autocomplete="name" required /></div>
+          <div class="field contact-reveal contact-reveal--6"><label for="company"><span>Company</span><span class="field-required">Required</span></label><input id="company" name="company" type="text" autocomplete="organization" required /></div>
+          <div class="field contact-reveal contact-reveal--7"><label for="email"><span>Work email</span><span class="field-required">Required</span></label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+          <div class="field contact-reveal contact-reveal--8"><label for="phone"><span>Phone number</span><span class="field-required">Required</span></label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required /></div>
+          <div class="field contact-reveal contact-reveal--9"><label for="message"><span>Message</span></label><textarea id="message" name="message" rows="3" placeholder="How can we help?"></textarea></div>
+          <button class="btn contact-reveal contact-reveal--10" type="submit">Request a conversation
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
           <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
