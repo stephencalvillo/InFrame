@@ -500,8 +500,11 @@
   .contact-card{
     background:#1D2731;
     padding:36px 40px 40px;
-    border:1px solid rgba(131,148,165,.12);
+    border:1px solid rgba(131,148,165,.16);
+    transition:border-color .35s var(--ease);
   }
+  .contact-card.is-invalid{border-color:#e07070}
+  .contact-card.is-valid{border-color:#6bc995}
   @media(max-width:640px){.contact-card{padding:28px 24px 32px}}
   .contact-card form{display:flex; flex-direction:column; gap:16px}
   .contact .field label{
@@ -1102,17 +1105,51 @@
   (function(){
     var f=document.getElementById('contactForm'),msg=document.getElementById('formMsg');
     if(!f)return;
+    var card=f.closest('.contact-card');
+    var required=[f.name,f.company,f.email,f.phone];
+    var submitFailed=false;
+    function isFormValid(){
+      var n=f.name.value.trim(),c=f.company.value.trim(),e=f.email.value.trim(),p=f.phone.value.trim();
+      if(!n||!c||!e||!p)return false;
+      return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    }
+    function setCardState(state){
+      if(!card)return;
+      card.classList.remove('is-invalid','is-valid');
+      if(state) card.classList.add(state);
+    }
+    function syncCardFromFields(){
+      if(isFormValid()){
+        submitFailed=false;
+        setCardState('is-valid');
+      }else if(submitFailed){
+        setCardState('is-invalid');
+      }else{
+        setCardState(null);
+      }
+    }
+    required.forEach(function(input){
+      input.addEventListener('input', syncCardFromFields);
+    });
     f.addEventListener('submit',function(ev){
       ev.preventDefault();
       var n=f.name.value.trim(),c=f.company.value.trim(),e=f.email.value.trim(),p=f.phone.value.trim();
-      if(!n||!c||!e||!p){
+      if(!isFormValid()){
+        submitFailed=true;
+        setCardState('is-invalid');
         msg.textContent='Please add your name, company, work email, and phone number.';
         msg.classList.add('is-error');
         return;
       }
       msg.classList.remove('is-error');
+      submitFailed=false;
+      setCardState('is-valid');
       msg.textContent='Thank you, '+n.split(' ')[0]+'. We\u2019ll be in touch shortly.';
       f.reset();
+      window.setTimeout(function(){
+        submitFailed=false;
+        setCardState(null);
+      }, 2200);
     });
   })();
 </script>
