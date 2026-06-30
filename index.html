@@ -173,27 +173,8 @@
     position:absolute; inset:0; z-index:1; pointer-events:none;
     background:var(--slate-05); opacity:.2;
   }
-  .hero-blur{
-    position:absolute; inset:0; z-index:2; pointer-events:none;
-    -webkit-backdrop-filter:blur(16px);
-    backdrop-filter:blur(16px);
-    mask-image:linear-gradient(
-      to top right,
-      #000 0%,
-      rgba(0,0,0,.85) 20%,
-      rgba(0,0,0,.45) var(--hero-shade-mid),
-      transparent var(--hero-shade-end)
-    );
-    -webkit-mask-image:linear-gradient(
-      to top right,
-      #000 0%,
-      rgba(0,0,0,.85) 20%,
-      rgba(0,0,0,.45) var(--hero-shade-mid),
-      transparent var(--hero-shade-end)
-    );
-  }
   .hero-fade{
-    position:absolute; inset:0; z-index:3; pointer-events:none;
+    position:absolute; inset:0; z-index:2; pointer-events:none;
     background:linear-gradient(
       to top right,
       var(--slate-05) 0%,
@@ -365,6 +346,12 @@
     border-top:1px solid rgba(131,148,165,.12);
     padding:108px 0 108px;
     overflow:visible;
+    isolation:isolate;
+  }
+  .licensed .wrap{position:relative; z-index:2}
+  .licensed-panel-wrap{
+    position:relative; z-index:3;
+    background:#1D2731;
   }
   @media(max-width:820px){.licensed{padding:88px 0 88px}}
   .licensed h2{
@@ -382,6 +369,7 @@
   .licensed-sub a:hover{color:var(--amber-02)}
   .licensed-map-stage{
     position:relative;
+    z-index:1;
     width:100%;
     margin-top:48px;
     height:clamp(240px,42vw,460px);
@@ -392,9 +380,19 @@
     perspective-origin:50% 0%;
     transform-style:preserve-3d;
     pointer-events:none;
-    overflow:visible;
+    overflow:hidden;
+    opacity:1;
+    transition:opacity .2s var(--ease);
     -webkit-mask-image:linear-gradient(to bottom, #000 35%, transparent 92%);
     mask-image:linear-gradient(to bottom, #000 35%, transparent 92%);
+  }
+  .licensed.is-licenses-open:not(.is-licenses-ready) .licensed-map-stage{
+    opacity:0;
+    visibility:hidden;
+  }
+  .licensed.is-licenses-open.is-licenses-ready .licensed-map-stage{
+    opacity:1;
+    visibility:visible;
   }
   .licensed-map-stage img{
     position:relative;
@@ -449,85 +447,70 @@
     }
   }
 
-  /* ---------- license modal ---------- */
-  body.is-license-modal-open{overflow:hidden}
-  .license-modal{
-    position:fixed; inset:0; z-index:120;
-    display:flex; align-items:flex-end; justify-content:center;
-    pointer-events:none; visibility:hidden;
+  /* ---------- license expand ---------- */
+  .license-toggle{
+    display:inline-flex; align-items:center; gap:8px;
+    border:none; background:none; padding:0;
+    font:inherit; font-size:inherit; line-height:inherit;
+    color:var(--amber); cursor:pointer;
+    transition:color .25s var(--ease);
   }
-  .license-modal.is-open,
-  .license-modal.is-closing{visibility:visible}
-  .license-modal.is-open{pointer-events:auto}
-  .license-modal__backdrop{
-    position:absolute; inset:0;
-    background:rgba(15,22,28,.62);
-    opacity:0;
-    transition:opacity .32s ease-in-out;
+  .license-toggle__label{
+    text-decoration:underline; text-underline-offset:3px;
   }
-  .license-modal.is-open .license-modal__backdrop{opacity:1}
-  .license-modal.is-closing .license-modal__backdrop{opacity:0}
-  .license-modal__panel{
-    position:relative; z-index:1;
-    width:min(680px, calc(100% - 32px));
-    max-height:min(84vh, 760px);
-    display:flex; flex-direction:column;
-    background:#1D2731; color:var(--on-slate);
-    border:1px solid rgba(131,148,165,.16);
-    border-bottom:none;
-    border-radius:0;
-    box-shadow:0 -24px 80px rgba(0,0,0,.42);
-    transform:translateY(100%);
-    transition:transform .32s ease-in-out;
+  .license-toggle:hover{color:var(--amber-02)}
+  .license-toggle__chevron{
+    width:14px; height:14px; flex-shrink:0;
+    transition:transform .35s var(--ease);
   }
-  .license-modal.is-open .license-modal__panel{transform:translateY(0)}
-  .license-modal.is-closing .license-modal__panel{transform:translateY(100%)}
-  .license-modal__head{
-    position:relative;
-    padding:28px 56px 18px 28px;
-    border-bottom:1px solid rgba(131,148,165,.12);
-    flex-shrink:0;
+  .licensed.is-licenses-open .license-toggle__chevron{transform:rotate(180deg)}
+  .license-panel{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .28s var(--ease);
   }
-  .license-modal__head h2{
-    font-size:clamp(22px,3vw,28px); font-weight:600;
-    letter-spacing:-.012em; line-height:1.15;
+  .license-panel.is-open{
+    max-height:2400px;
+    padding:24px 0 48px;
   }
-  .license-modal__head p{
-    margin-top:8px; font-size:14px; line-height:1.5; color:var(--slate-02);
+  .license-panel__inner{overflow:visible}
+  .license-panel__hint{
+    margin-bottom:18px;
+    font-size:14px; line-height:1.5; color:var(--slate-02);
+    opacity:0; transform:translateY(6px);
+    transition:opacity .16s var(--ease), transform .16s var(--ease);
   }
-  .license-modal__close{
-    position:absolute; top:20px; right:20px;
-    width:36px; height:36px;
-    display:inline-flex; align-items:center; justify-content:center;
-    border:none; border-radius:0;
-    background:transparent; color:var(--on-slate);
-    cursor:pointer;
-    transition:background .25s var(--ease), color .25s var(--ease);
+  .license-panel.is-revealed .license-panel__hint{
+    opacity:1; transform:none;
   }
-  .license-modal__close:hover{background:rgba(131,148,165,.14)}
-  .license-modal__close svg{width:18px; height:18px}
-  .license-modal__body{
-    overflow:auto; overscroll-behavior:contain;
-    padding:8px 28px 28px;
-    -webkit-overflow-scrolling:touch;
+  .license-list{
+    list-style:none;
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    column-gap:40px;
   }
-  .license-list{list-style:none}
   .license-row{
-    display:flex; align-items:baseline; justify-content:space-between; gap:24px;
-    padding:13px 0;
+    display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+    padding:11px 0;
     border-bottom:1px solid rgba(131,148,165,.1);
+    opacity:0; transform:translateY(6px);
+    pointer-events:none;
+    transition:opacity .16s var(--ease), transform .16s var(--ease);
+    transition-delay:calc(var(--row-i, 0) * 18ms);
   }
-  .license-row:last-child{border-bottom:none}
+  .license-panel.is-revealed .license-row{
+    opacity:1; transform:none; pointer-events:auto;
+  }
   .license-row__state{
-    font-size:15px; font-weight:500; text-align:left;
-    color:var(--on-slate); flex:1 1 auto;
+    font-size:14.5px; font-weight:500; text-align:left;
+    color:var(--on-slate); flex:1 1 auto; min-width:0;
   }
   .license-row__number{
     position:relative;
     flex:0 0 auto;
     display:inline-grid; grid-template-columns:1fr;
     border:none; background:transparent; padding:0;
-    font:inherit; font-size:14.5px; font-weight:400;
+    font:inherit; font-size:14px; font-weight:400;
     letter-spacing:.02em; text-align:right; color:var(--amber);
     cursor:pointer; white-space:nowrap;
     transition:color .25s var(--ease);
@@ -542,36 +525,27 @@
     justify-self:end;
     transition:opacity .2s ease-in-out, transform .2s ease-in-out;
   }
-  .license-row__value{
-    opacity:1;
-    transform:translateX(0);
-  }
+  .license-row__value{opacity:1; transform:translateX(0)}
   .license-row__copied{
-    opacity:0;
-    transform:translateX(12px);
-    color:var(--slate-02);
-    font-weight:400;
-    pointer-events:none;
+    opacity:0; transform:translateX(12px);
+    color:var(--slate-02); font-weight:400; pointer-events:none;
   }
   .license-row__number.is-copied .license-row__value{
-    opacity:0;
-    transform:translateX(-10px);
+    opacity:0; transform:translateX(-10px);
   }
   .license-row__number.is-copied .license-row__copied{
-    opacity:1;
-    transform:translateX(0);
+    opacity:1; transform:translateX(0);
   }
-  @media(max-width:640px){
-    .license-modal__panel{width:100%; max-height:88vh; border-radius:0}
-    .license-modal__head{padding:24px 52px 16px 22px}
-    .license-modal__body{padding:6px 22px 24px}
-    .license-row{gap:16px}
-    .license-row__state{font-size:14.5px}
-    .license-row__number{font-size:13.5px}
+  @media(max-width:760px){
+    .license-list{grid-template-columns:1fr; column-gap:0}
+    .license-row{gap:20px; padding:13px 0}
+    .license-row__state{font-size:15px}
+    .license-row__number{font-size:14.5px}
   }
   @media(prefers-reduced-motion:reduce){
-    .license-modal__backdrop,
-    .license-modal__panel{transition:none}
+    .license-panel{transition:none}
+    .license-panel__hint,
+    .license-row{transition:none; opacity:1; transform:none}
     .license-row__value,
     .license-row__copied{transition:none}
   }
@@ -811,7 +785,6 @@
       </div>
     </div>
     <div class="hero-overlay"></div>
-    <div class="hero-blur"></div>
     <div class="hero-fade"></div>
   </div>
   <div class="wrap">
@@ -904,7 +877,15 @@
   <div class="wrap">
     <p class="eyebrow licensed-reveal licensed-reveal--1">Licensed in 50 states</p>
     <h2 class="licensed-reveal licensed-reveal--2">InFrame Insurance Services LLC is a national licensed insurance brokerage.</h2>
-    <p class="licensed-sub licensed-reveal licensed-reveal--3">NPN# 22200284. <a href="#" data-license-modal-open>See our licenses here.</a></p>
+    <p class="licensed-sub licensed-reveal licensed-reveal--3">NPN# 22200284. <button type="button" class="license-toggle" id="licenseToggle" aria-expanded="false" aria-controls="licensePanel"><span class="license-toggle__label">See our licenses here.</span><svg class="license-toggle__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></p>
+  </div>
+  <div class="wrap licensed-panel-wrap">
+    <div class="license-panel" id="licensePanel" aria-hidden="true">
+      <div class="license-panel__inner">
+        <p class="license-panel__hint">Click on the licence number to copy to your clipboard</p>
+        <ul class="license-list" id="licenseList"></ul>
+      </div>
+    </div>
   </div>
   <div class="licensed-map-stage licensed-reveal licensed-reveal--4" aria-hidden="true">
     <img src="assets/us-states-outline.svg" alt="" width="1017" height="639" decoding="async" loading="lazy" />
@@ -969,7 +950,7 @@
           </defs>
         </svg>
       </a>
-      <div class="foot-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#" data-license-modal-open>Licenses</a></div>
+      <div class="foot-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#licenses" data-license-expand>Licenses</a></div>
     </div>
     <p class="legal">
       <!-- COMPLIANCE: confirm with counsel; replace bracketed placeholders before launch. -->
@@ -978,22 +959,6 @@
     <p class="copyright">© 2026 InFrame Risk Inc. All rights reserved.</p>
   </div>
 </footer>
-
-<div class="license-modal" id="licenseModal" hidden aria-hidden="true">
-  <div class="license-modal__backdrop" data-license-modal-close tabindex="-1"></div>
-  <div class="license-modal__panel" role="dialog" aria-modal="true" aria-labelledby="licenseModalTitle">
-    <div class="license-modal__head">
-      <h2 id="licenseModalTitle">License numbers</h2>
-      <p>Click on the licence number to copy to your clipboard</p>
-      <button class="license-modal__close" type="button" data-license-modal-close aria-label="Close license list">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-    <div class="license-modal__body">
-      <ul class="license-list" id="licenseList"></ul>
-    </div>
-  </div>
-</div>
 
 </main>
 </div>
@@ -1331,9 +1296,9 @@
     });
   })();
   (function(){
-    var MODAL_MS=320;
     var COPY_MS=200;
     var COPY_HOLD_MS=1000;
+    var PANEL_MS=280;
     var licenses=[
       {state:'Alabama',number:'3004195827'},{state:'Alaska',number:'3004201695'},{state:'Arizona',number:'3004195639'},
       {state:'Arkansas',number:'3004195617'},{state:'California',number:'6019212'},{state:'Colorado',number:'945106'},
@@ -1353,16 +1318,72 @@
       {state:'Vermont',number:'3004195792'},{state:'Virginia',number:'166489'},{state:'Washington',number:'1357751'},
       {state:'West Virginia',number:'3004195822'},{state:'Wisconsin',number:'3004195739'},{state:'Wyoming',number:'666822'}
     ];
-    var modal=document.getElementById('licenseModal');
+    var licensed=document.querySelector('.licensed');
+    var toggle=document.getElementById('licenseToggle');
+    var panel=document.getElementById('licensePanel');
     var list=document.getElementById('licenseList');
-    var closeBtn=modal&&modal.querySelector('.license-modal__close');
     var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var closingTimer=null;
-    if(!modal||!list)return;
+    var mobileList=window.matchMedia('(max-width: 760px)');
+    var revealTimer=null;
+    if(!licensed||!toggle||!panel||!list)return;
 
-    licenses.forEach(function(item){
+    function revealRows(){
+      if(panel.classList.contains('is-open')&&!panel.classList.contains('is-revealed')){
+        panel.classList.add('is-revealed');
+        licensed.classList.add('is-licenses-ready');
+      }
+    }
+
+    function clearRevealTimer(){
+      if(revealTimer){
+        window.clearTimeout(revealTimer);
+        revealTimer=null;
+      }
+    }
+
+    function scheduleReveal(){
+      clearRevealTimer();
+      if(reduced) return;
+      revealTimer=window.setTimeout(revealRows, PANEL_MS+40);
+    }
+
+    function rowIndex(i){
+      return mobileList.matches ? i : Math.floor(i/3);
+    }
+
+    function setPanelOpen(open){
+      toggle.setAttribute('aria-expanded', open?'true':'false');
+      panel.setAttribute('aria-hidden', open?'false':'true');
+      if(open){
+        panel.classList.remove('is-revealed');
+        licensed.classList.remove('is-licenses-ready');
+        licensed.classList.add('is-licenses-open');
+        if(reduced){
+          panel.classList.add('is-open','is-revealed');
+          licensed.classList.add('is-licenses-ready');
+          return;
+        }
+        requestAnimationFrame(function(){
+          panel.classList.add('is-open');
+          scheduleReveal();
+        });
+        return;
+      }
+      clearRevealTimer();
+      panel.classList.remove('is-revealed','is-open');
+      licensed.classList.remove('is-licenses-open','is-licenses-ready');
+    }
+
+    panel.addEventListener('transitionend', function(ev){
+      if(ev.propertyName!=='max-height') return;
+      clearRevealTimer();
+      revealRows();
+    });
+
+    licenses.forEach(function(item, i){
       var li=document.createElement('li');
       li.className='license-row';
+      li.style.setProperty('--row-i', Math.min(rowIndex(i), 16));
       var state=document.createElement('span');
       state.className='license-row__state';
       state.textContent=item.state;
@@ -1418,53 +1439,16 @@
       return ok;
     }
 
-    function openModal(ev){
-      if(ev) ev.preventDefault();
-      if(modal.classList.contains('is-open')) return;
-      if(closingTimer){window.clearTimeout(closingTimer); closingTimer=null;}
-      modal.hidden=false;
-      modal.setAttribute('aria-hidden','false');
-      document.body.classList.add('is-license-modal-open');
-      if(reduced){
-        modal.classList.add('is-open');
-        if(closeBtn) closeBtn.focus();
-        return;
-      }
-      requestAnimationFrame(function(){
-        modal.classList.remove('is-closing');
-        modal.classList.add('is-open');
-        if(closeBtn) closeBtn.focus();
+    toggle.addEventListener('click', function(){
+      setPanelOpen(!panel.classList.contains('is-open'));
+    });
+
+    document.querySelectorAll('[data-license-expand]').forEach(function(link){
+      link.addEventListener('click', function(ev){
+        ev.preventDefault();
+        setPanelOpen(true);
+        licensed.scrollIntoView({behavior: reduced?'auto':'smooth', block:'start'});
       });
-    }
-
-    function closeModal(){
-      if(!modal.classList.contains('is-open')||modal.classList.contains('is-closing')) return;
-      modal.classList.remove('is-open');
-      if(reduced){
-        modal.classList.remove('is-closing');
-        modal.hidden=true;
-        modal.setAttribute('aria-hidden','true');
-        document.body.classList.remove('is-license-modal-open');
-        return;
-      }
-      modal.classList.add('is-closing');
-      closingTimer=window.setTimeout(function(){
-        modal.classList.remove('is-closing');
-        modal.hidden=true;
-        modal.setAttribute('aria-hidden','true');
-        document.body.classList.remove('is-license-modal-open');
-        closingTimer=null;
-      }, MODAL_MS);
-    }
-
-    document.querySelectorAll('[data-license-modal-open]').forEach(function(trigger){
-      trigger.addEventListener('click', openModal);
-    });
-    modal.querySelectorAll('[data-license-modal-close]').forEach(function(el){
-      el.addEventListener('click', closeModal);
-    });
-    document.addEventListener('keydown', function(ev){
-      if(ev.key==='Escape'&&modal.classList.contains('is-open')) closeModal();
     });
   })();
 </script>
