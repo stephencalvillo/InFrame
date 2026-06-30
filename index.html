@@ -499,7 +499,7 @@
     position:absolute; top:20px; right:20px;
     width:36px; height:36px;
     display:inline-flex; align-items:center; justify-content:center;
-    border:none; border-radius:999px;
+    border:none; border-radius:0;
     background:transparent; color:var(--on-slate);
     cursor:pointer;
     transition:background .25s var(--ease), color .25s var(--ease);
@@ -523,15 +523,44 @@
     color:var(--on-slate); flex:1 1 auto;
   }
   .license-row__number{
+    position:relative;
     flex:0 0 auto;
+    display:inline-grid; grid-template-columns:1fr;
     border:none; background:transparent; padding:0;
-    font:inherit; font-size:14.5px; font-weight:600;
+    font:inherit; font-size:14.5px; font-weight:400;
     letter-spacing:.02em; text-align:right; color:var(--amber);
     cursor:pointer; white-space:nowrap;
     transition:color .25s var(--ease);
   }
   .license-row__number:hover{color:var(--amber-02)}
-  .license-row__number.is-copied{color:#6bc995}
+  .license-row__number:hover .license-row__value{
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  .license-row__value,
+  .license-row__copied{
+    grid-area:1 / 1;
+    justify-self:end;
+    transition:opacity .2s ease-in-out, transform .2s ease-in-out;
+  }
+  .license-row__value{
+    opacity:1;
+    transform:translateX(0);
+  }
+  .license-row__copied{
+    opacity:0;
+    transform:translateX(12px);
+    color:var(--slate-02);
+    font-weight:400;
+    pointer-events:none;
+  }
+  .license-row__number.is-copied .license-row__value{
+    opacity:0;
+    transform:translateX(-10px);
+  }
+  .license-row__number.is-copied .license-row__copied{
+    opacity:1;
+    transform:translateX(0);
+  }
   @media(max-width:640px){
     .license-modal__panel{width:100%; max-height:88vh; border-radius:0}
     .license-modal__head{padding:24px 52px 16px 22px}
@@ -543,6 +572,8 @@
   @media(prefers-reduced-motion:reduce){
     .license-modal__backdrop,
     .license-modal__panel{transition:none}
+    .license-row__value,
+    .license-row__copied{transition:none}
   }
 
   /* ---------- contact ---------- */
@@ -1301,6 +1332,8 @@
   })();
   (function(){
     var MODAL_MS=320;
+    var COPY_MS=200;
+    var COPY_HOLD_MS=1000;
     var licenses=[
       {state:'Alabama',number:'3004195827'},{state:'Alaska',number:'3004201695'},{state:'Arizona',number:'3004195639'},
       {state:'Arkansas',number:'3004195617'},{state:'California',number:'6019212'},{state:'Colorado',number:'945106'},
@@ -1336,26 +1369,34 @@
       var btn=document.createElement('button');
       btn.type='button';
       btn.className='license-row__number';
-      btn.textContent=item.number;
+      var valueEl=document.createElement('span');
+      valueEl.className='license-row__value';
+      valueEl.textContent=item.number;
+      var copiedEl=document.createElement('span');
+      copiedEl.className='license-row__copied';
+      copiedEl.textContent='Copied';
+      copiedEl.setAttribute('aria-hidden','true');
+      btn.appendChild(valueEl);
+      btn.appendChild(copiedEl);
       btn.setAttribute('aria-label','Copy '+item.state+' license number '+item.number);
       btn.addEventListener('click', function(){
         var self=this;
+        if(self.classList.contains('is-copied')) return;
         var value=item.number;
-        var label=value;
-        function copied(){
+        function showCopied(){
           self.classList.add('is-copied');
-          self.textContent='Copied';
+          copiedEl.setAttribute('aria-hidden','false');
           window.setTimeout(function(){
             self.classList.remove('is-copied');
-            self.textContent=label;
-          }, 1400);
+            copiedEl.setAttribute('aria-hidden','true');
+          }, reduced ? COPY_HOLD_MS : COPY_MS + COPY_HOLD_MS);
         }
         if(navigator.clipboard&&window.isSecureContext){
-          navigator.clipboard.writeText(value).then(copied).catch(function(){
-            fallbackCopy(value)&&copied();
+          navigator.clipboard.writeText(value).then(showCopied).catch(function(){
+            fallbackCopy(value)&&showCopied();
           });
         }else if(fallbackCopy(value)){
-          copied();
+          showCopied();
         }
       });
       li.appendChild(state);
